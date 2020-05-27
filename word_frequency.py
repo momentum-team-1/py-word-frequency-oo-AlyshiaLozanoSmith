@@ -4,22 +4,26 @@ STOP_WORDS = [
     'were', 'will', 'with'
 ]
 
+import string
 
 class FileReader:
     def __init__(self, filename):
-        pass
+        self.filename = filename 
 
     def read_contents(self):
         """
         This should read all the contents of the file
         and return them as one string.
         """
-        raise NotImplementedError("FileReader.read_contents")
-
+        opened_file = self.filename.open()
+        read_words = opened_file.read()
+        opened_file.close()
+        return read_words
 
 class WordList:
     def __init__(self, text):
-        pass
+        self.words = text.split()
+        
 
     def extract_words(self):
         """
@@ -27,14 +31,17 @@ class WordList:
         is responsible for lowercasing all words and stripping
         them of punctuation.
         """
-        raise NotImplementedError("WordList.extract_words")
+        self.cleaned_words = [word.lower().strip(string.punctuation) for word in self.words]
+        
+        
 
     def remove_stop_words(self):
         """
         Removes all stop words from our word list. Expected to
         be run after extract_words.
         """
-        raise NotImplementedError("WordList.remove_stop_words")
+        self.cleaned_words_no_stop = [word for word in self.cleaned_words if word not in STOP_WORDS]
+        
 
     def get_freqs(self):
         """
@@ -43,12 +50,16 @@ class WordList:
         extract_words and remove_stop_words. The data structure
         could be a dictionary or another type of object.
         """
-        raise NotImplementedError("WordList.get_freqs")
+        word_freqs = {}
+        for item in self.cleaned_words_no_stop:
+         word_freqs[item] = word_freqs.get(item, 0) + 1
+        return word_freqs
+
 
 
 class FreqPrinter:
     def __init__(self, freqs):
-        pass
+        self.freqs = freqs
 
     def print_freqs(self):
         """
@@ -67,7 +78,8 @@ class FreqPrinter:
        rights | 6    ******
         right | 6    ******
         """
-        raise NotImplementedError("FreqPrinter.print_freqs")
+        
+        
 
 
 if __name__ == "__main__":
